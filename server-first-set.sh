@@ -12,7 +12,6 @@ if [ "$isok" == 'n' ]; then
         echo -e "\033[31mended\033[0m"
         exit 1
 fi
-
 yum -y update
 yum install -y screen zip unzip sendmail lrzsz
 
@@ -31,6 +30,10 @@ fi
 sed -in "s/[# ]*Port [0-9]\+/Port ${port}/" /etc/ssh/ssh_config
 sed -in "s/[# ]*Port [0-9]\+/Port ${port}/" /etc/ssh/sshd_config
 sed -in 's/[# ]*PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
+if [ -s /usr/sbin/firewalld ]; then
+        systemctl stop firewalld
+        systemctl disable firewalld
+fi
 if iptables -L -n | grep ${port}; then
         echo "port ${port} is already opened."
 else
