@@ -33,6 +33,8 @@ sed -in 's/[# ]*PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
 if [ -s /usr/sbin/firewalld ]; then
         systemctl stop firewalld
         systemctl disable firewalld
+        systemctl mask firewalld
+        yum install -y iptables-services
 fi
 if iptables -L -n | grep ${port}; then
         echo "port ${port} is already opened."
@@ -40,7 +42,7 @@ else
         echo "add iptables rule for port:${port}"
         iptables -A INPUT -p tcp --dport ${port} -j ACCEPT
 fi
-iptables-save
+service iptables save
 echo "close selinux."
 setenforce 0
 sed -n '/SELINUX/s/enforcing/disabled/' /etc/selinux/config
