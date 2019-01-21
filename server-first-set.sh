@@ -34,7 +34,9 @@ if [ -s /usr/sbin/firewalld ]; then
         systemctl stop firewalld
         systemctl disable firewalld
         systemctl mask firewalld
-        yum install -y iptables-services
+        yum install -y iptables-services iptables-devel
+        systemctl enable iptables.service
+        chkconfig iptables on
 fi
 if iptables -L -n | grep ${port}; then
         echo "port ${port} is already opened."
