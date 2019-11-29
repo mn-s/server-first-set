@@ -47,7 +47,7 @@ fi
 service iptables save
 echo "close selinux."
 setenforce 0
-sed -n '/SELINUX/s/enforcing/disabled/' /etc/selinux/config
+sed -i '/SELINUX/s/enforcing/disabled/' /etc/selinux/config
 service sshd restart
 echo "your ssh port is:${port}"
 echo -e "\033[31mPlease remove old port rule from iptables by yourself.The command is:\n\033[36miptables -D -p tcp --dport {yourport} -j ACCEPT\033[0m"
